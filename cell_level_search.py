@@ -1,6 +1,9 @@
+import torch
+import torch.nn as nn
 import torch.nn.functional as F
-from operations import *
+
 from genotypes import PRIMITIVES
+from operations import OPS, ReLUConvBN
 
 
 class MixedOp(nn.Module):
@@ -96,7 +99,8 @@ class Cell(nn.Module):
         all_states = []
         if s0 is not None:
             # s0 = self.pre_preprocess(s0)
-            s0 = F.interpolate(s0, (size_h, size_w), mode='bilinear', align_corners=True) if (s0.shape[2] != size_h) or (s0.shape[3] != size_w) else s0
+            s0 = F.interpolate(s0, (size_h, size_w), mode='bilinear', align_corners=True) \
+                if (s0.shape[2] != size_h) or (s0.shape[3] != size_w) else s0
             s0 = self.pre_preprocess(s0) if (s0.shape[1] != self.C_out) else s0
             if s1_down is not None:
                 states_down = [s0, s1_down]
@@ -138,7 +142,6 @@ class Cell(nn.Module):
             concat_feature = torch.cat(states[-self.block_multiplier:], dim=1)
             final_concates.append(concat_feature)
         return final_concates
-
 
     def _initialize_weights(self):
         for m in self.modules():

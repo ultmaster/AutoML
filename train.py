@@ -1,21 +1,20 @@
 import os
 import pdb
 import warnings
-import numpy as np
 
+import numpy as np
 import torch
-import torch.nn as nn
-import torch.utils.data
 import torch.backends.cudnn
+import torch.nn as nn
 import torch.optim as optim
+import torch.utils.data
 
 import dataloaders
-from utils.utils import AverageMeter
+from config_utils.re_train_autodeeplab import obtain_retrain_autodeeplab_args
+from retrain_model.build_autodeeplab import Retrain_Autodeeplab
 from utils.loss import build_criterion
 from utils.step_lr_scheduler import Iter_LR_Scheduler
-from retrain_model.build_autodeeplab import Retrain_Autodeeplab
-from config_utils.re_train_autodeeplab import obtain_retrain_autodeeplab_args
-
+from utils.utils import AverageMeter
 
 
 def main():
@@ -103,6 +102,7 @@ def main():
             }, model_fname % (epoch + 1))
 
         print('reset local total loss!')
+
 
 if __name__ == "__main__":
     main()

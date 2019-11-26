@@ -1,32 +1,30 @@
-import warnings
 from torch.utils.data.dataloader import DataLoader
-from dataloaders.datasets.cityscapes import CityscapesSegmentation
-from config_utils.search_args import obtain_search_args
-from utils.loss import SegmentationLosses
-import torch
-import numpy as np
+
 from auto_deeplab import AutoDeeplab
+from config_utils.search_args import obtain_search_args
+from dataloaders.datasets.cityscapes import CityscapesSegmentation
+from utils.loss import SegmentationLosses
 
 model = AutoDeeplab(19, 12).cuda()
 
 args = obtain_search_args()
 
-
 args.cuda = True
 criterion = SegmentationLosses(weight=None, cuda=args.cuda).build_loss(mode=args.loss_type)
+
 
 def save_grad(name):
     def hook(grad):
         grads[name] = grad
+
     return hook
+
 
 args.crop_size = 64
 
 dataset = CityscapesSegmentation(args, r'E:\BaiduNetdiskDownload\cityscapes', 'train')
 
-
 loader = DataLoader(dataset, batch_size=2, shuffle=True)
-
 
 grads = {}
 
@@ -34,6 +32,7 @@ grads = {}
 def save_grad(name):
     def hook(grad):
         grads[name] = grad
+
     return hook
 
 
@@ -64,6 +63,5 @@ for i, sample in enumerate(loader):
 
     if i == 0:
         exit()
-
 
 # 查看 y 的梯度值

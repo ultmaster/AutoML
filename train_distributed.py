@@ -1,28 +1,28 @@
-import os
-import sys
-import PIL
-import time
-import random
-import logging
 import datetime
+import logging
+import os
 import os.path as osp
+import random
+import sys
+import time
 
+import PIL
 import torch
 import torch.backends
-import torch.nn as nn
 import torch.backends.cudnn
 import torch.distributed as dist
+import torch.nn as nn
 
+from config_utils.re_train_autodeeplab import obtain_retrain_autodeeplab_args
+from config_utils.retrain_config import config_factory
+from dataloaders import make_data_loader
+from evaluate_distributed import MscEval
+from retrain_model.build_autodeeplab import Retrain_Autodeeplab
+from utils.logger import Logger, setup_logger
 from utils.loss import OhemCELoss
+from utils.optimizer_distributed import Optimizer
 from utils.utils import prepare_seed
 from utils.utils import time_for_file
-from evaluate_distributed import MscEval
-from dataloaders import make_data_loader
-from utils.logger import Logger, setup_logger
-from utils.optimizer_distributed import Optimizer
-from config_utils.retrain_config import config_factory
-from retrain_model.build_autodeeplab import Retrain_Autodeeplab
-from config_utils.re_train_autodeeplab import obtain_retrain_autodeeplab_args
 
 
 def main():
@@ -127,8 +127,9 @@ def main():
                 t_intv, glob_t_intv = ed - start_time, ed - glob_start_time
                 eta = int((max_iteration - it) * (glob_t_intv / it))
                 eta = str(datetime.timedelta(seconds=eta))
-                msg = ', '.join(['iter: {it}/{max_iteration}', 'lr: {lr:4f}', 'loss: {loss:.4f}', 'eta: {eta}', 'time: {time:.4f}',
-                                 ]).format(it=it, max_iteration=max_iteration, lr=lr, loss=loss_avg, time=t_intv, eta=eta)
+                msg = ', '.join(
+                    ['iter: {it}/{max_iteration}', 'lr: {lr:4f}', 'loss: {loss:.4f}', 'eta: {eta}', 'time: {time:.4f}',
+                     ]).format(it=it, max_iteration=max_iteration, lr=lr, loss=loss_avg, time=t_intv, eta=eta)
                 # TODO : now the logger.info will error if iter > 350000, so use print haha
                 if max_iteration > 350000:
                     logger.info(msg)
@@ -150,7 +151,8 @@ def main():
                 save_pth = osp.join(cfg.respth, save_name)
                 state = model.module.state_dict() if hasattr(model, 'module') else model.state_dict()
 
-                checkpoint = {'state_dict': state, 'epoch': n_epoch, 'iter': it, 'optimizer': optimizer.optim.state_dict()}
+                checkpoint = {'state_dict': state, 'epoch': n_epoch, 'iter': it,
+                              'optimizer': optimizer.optim.state_dict()}
                 if dist.get_rank() == 0:
                     torch.save(state, save_pth)
                 logger.info('model of iter {} saved to: {}'.format(it, save_pth))
@@ -180,8 +182,9 @@ def main():
                 t_intv, glob_t_intv = ed - start_time, ed - glob_start_time
                 eta = int((max_iteration - it) * (glob_t_intv / it))
                 eta = str(datetime.timedelta(seconds=eta))
-                msg = ', '.join(['iter: {it}/{max_iteration}', 'lr: {lr:4f}', 'loss: {loss:.4f}', 'eta: {eta}', 'time: {time:.4f}',
-                                 ]).format(it=it, max_iteration=max_iteration, lr=lr, loss=loss_avg, time=t_intv, eta=eta)
+                msg = ', '.join(
+                    ['iter: {it}/{max_iteration}', 'lr: {lr:4f}', 'loss: {loss:.4f}', 'eta: {eta}', 'time: {time:.4f}',
+                     ]).format(it=it, max_iteration=max_iteration, lr=lr, loss=loss_avg, time=t_intv, eta=eta)
                 logger.info(msg)
                 loss_avg = []
 

@@ -1,8 +1,10 @@
 import os
+
 import numpy as np
-from modeling.deeplab import *
-from decoding_formulas import Decoder
+
 from config_utils.decode_args import obtain_decode_args
+from decoding_formulas import Decoder
+from modeling.deeplab import *
 
 
 class Loader(object):

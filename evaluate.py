@@ -1,18 +1,17 @@
 import os
-import numpy as np
 import os.path as osp
 
+import numpy as np
 import torch
-import torch.nn as nn
 import torch.backends.cudnn
 import torch.nn.functional as F
+from mypath import Path
 from torch.utils.data.dataloader import DataLoader
 
-from mypath import Path
-from utils.utils import AverageMeter, inter_and_union
 from config_utils.evaluate_args import obtain_evaluate_args
-from retrain_model.build_autodeeplab import Retrain_Autodeeplab
 from dataloaders.datasets.cityscapes import CityscapesSegmentation
+from retrain_model.build_autodeeplab import Retrain_Autodeeplab
+from utils.utils import AverageMeter, inter_and_union
 
 
 def main(start_epoch, epochs):
