@@ -46,8 +46,8 @@ class Trainer(object):
         self.opt_level = args.opt_level
 
         kwargs = {'num_workers': args.workers, 'pin_memory': True, 'drop_last': True}
-        self.train_loaderA, self.train_loaderB, self.val_loader, self.test_loader, self.nclass = make_data_loader(args,
-                                                                                                                  **kwargs)
+        self.train_loaderA, self.train_loaderB, self.val_loader, self.test_loader, self.nclass = \
+            make_data_loader(args, **kwargs)
 
         if args.use_balanced_weights:
             classes_weights_path = os.path.join(Path.db_root_dir(args.dataset), args.dataset + '_classes_weights.npy')

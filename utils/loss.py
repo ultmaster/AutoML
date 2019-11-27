@@ -26,8 +26,6 @@ class SegmentationLosses(object):
             criterion = criterion.cuda()
 
         loss = criterion(logit, target.long())
-
-
         return loss
 
     def FocalLoss(self, logit, target, gamma=2, alpha=0.5):
