@@ -1,7 +1,7 @@
 import os
 import torch
 from torchvision.utils import make_grid
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 from dataloaders.dataloader_utils import decode_seg_map_sequence
 import torch.distributed as dist
 
@@ -12,7 +12,7 @@ class TensorboardSummary(object):
         self.use_dist = use_dist
 
     def create_summary(self):
-        writer = SummaryWriter(logdir=os.path.join(self.directory))
+        writer = SummaryWriter(log_dir=os.path.join(self.directory))
         return writer
 
     def visualize_image(self, writer, dataset, image, target, output, global_step):

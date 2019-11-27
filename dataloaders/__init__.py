@@ -4,7 +4,7 @@ import torch.utils.data.distributed
 
 
 def make_data_loader(args, **kwargs):
-    if args.dist:
+    if False:
         print("=> Using Distribued Sampler")
         if args.dataset == 'cityscapes':
             if args.autodeeplab == 'search':
